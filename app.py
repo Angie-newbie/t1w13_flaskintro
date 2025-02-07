@@ -13,6 +13,12 @@ products = [{
     "price": 400
 }]
 
+
+def get_next_id():
+    next_id = len(products) + 1
+    return next_id
+    
+
 @app.route('/')
 def hello():
     return '<h1> Hello world!</h1>'
@@ -30,7 +36,16 @@ def all_products():
 def one_product(id):
     filtered_products = list(filter(lambda p: p['id'] == id, products))
     print(filtered_products)
-    return filtered_products
+    return filtered_products[0]
+
+@app.route('/products', methods=['POST'])
+def create_product():
+    global next_id
+    product = request.get_json()
+    product['id'] = get_next_id()
+    products.append(product)
+    return product
+
 
 @app.route('/can-vote')
 def canvote():
